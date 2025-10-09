@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Constants {
@@ -7,11 +6,11 @@ class Constants {
   // get API key from env variables
   static String get apiKey => dotenv.env ['API_KEY'] ?? '';
 
-  // list of endpoints
+  // list of endpoints => nama endpointnnya
   static const String topHeadLines = '/top-headlines';
   static const String everything = '/everything';
 
-  // list of categories 
+  // list of categories => kategory news appnya
   static const List<String> categories = [
      'general', 
      'technology',
@@ -22,10 +21,10 @@ class Constants {
      'entertaiment',
   ];
 
-  // countries
+  // countries => negaranya
   static const String defaultCountry = 'us';
 
-  // app info
+  // app info => info appnya
   static const String appName = 'News App';
   static const String appVersion = '1.0.0';
 }
