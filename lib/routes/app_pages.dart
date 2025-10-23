@@ -19,7 +19,7 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => HomeScreen(),
-      binding: HomeBindings()
+      binding: HomeBindings() //binding untuk memanggil semua controller
     ),
     GetPage(
       name: _Paths.NEWS_DETAIL,
