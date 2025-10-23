@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:tribun_app/controllers/news_controller.dart';
+import 'package:tribun_app/routes/app_pages.dart';
 import 'package:tribun_app/utils/app_colors.dart';
 import 'package:tribun_app/widgets/category_chip.dart';
 import 'package:tribun_app/widgets/loading_shimmer.dart';
@@ -70,8 +71,7 @@ class HomeScreen extends GetView<NewsController>{
                       return NewsCard(
                         articles: article,
                         ontap: () => Get.toNamed(
-                          // TODO: add route to detail screen,
-
+                          Routes.NEWS_DETAIL,
                           // argument berfungsi untuk bernavigasi ke halaman lain dengan membawa data
                           arguments: article
                         ),
