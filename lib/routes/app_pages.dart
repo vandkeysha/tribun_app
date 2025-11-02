@@ -21,7 +21,7 @@ class AppPages {
     GetPage(
       name: Routes.HOME,
       page: () => HomeScreen(),
-      binding: HomeBindings(), // Memanggil semua controller
+      binding: HomeBindings(), 
     ),
     GetPage(
       name: Routes.NEWS_DETAIL,

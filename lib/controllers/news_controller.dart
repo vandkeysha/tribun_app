@@ -35,7 +35,6 @@ class NewsController extends GetxController {
     {'code': 'br', 'name': 'Brazil'},
   ];
 
-  // === Fetch berita utama ===
   Future<void> fetchTopHeadlines({String? category, String? country}) async {
     try {
       _isLoading.value = true;

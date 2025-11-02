@@ -42,7 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
 
-              // === COUNTRY DROPDOWN ===
+
               Obx(() {
                 return DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -79,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           const SizedBox(height: 20),
 
-          // === SEARCH BAR ===
+
           Container(
             decoration: BoxDecoration(
               color: const Color(0xFFFFE9A0),

@@ -20,16 +20,16 @@ class HomeScreen extends GetView<NewsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      // ✅ panggil bottom bar-nya di bawah sini
+    
       bottomNavigationBar: const CustomBottomBar(),
 
       body: SafeArea(
         child: Column(
           children: [
-            // App Bar
+           
             CustomAppBar(),
 
-            // Body Content
+         
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.refreshNews,
@@ -38,7 +38,7 @@ class HomeScreen extends GetView<NewsController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Categories
+                     
                       Container(
                         color: AppColors.primary,
                         height: 45,
@@ -61,17 +61,17 @@ class HomeScreen extends GetView<NewsController> {
 
                       const SizedBox(height: 16),
 
-                      // Recommended
+                     
                       RecommendedSection(controller: controller),
 
                       const SizedBox(height: 24),
 
-                      // Explore more
+                     
                       ExploreMoreSection(controller: controller),
 
                       const SizedBox(height: 24),
 
-                      // News List
+                    
                       Obx(() {
                         if (controller.isLoading) {
                           return const LoadingShimmer();
@@ -109,9 +109,8 @@ class HomeScreen extends GetView<NewsController> {
     );
   }
 
-  // ===========================
+  
   // Widget Empty/Error
-  // ===========================
   Widget _buildEmptyWidget() {
     return const Padding(
       padding: EdgeInsets.only(top: 100),

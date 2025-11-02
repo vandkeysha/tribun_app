@@ -30,9 +30,7 @@ class RecommendedSection extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  // TODO: nanti bisa diarahkan ke halaman khusus rekomendasi
-                },
+                onPressed: () {},
                 child: const Row(
                   children: [
                     Text(
@@ -86,7 +84,7 @@ class RecommendedSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // === IMAGE ===
+              
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(16),

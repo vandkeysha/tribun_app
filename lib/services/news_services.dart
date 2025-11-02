@@ -7,7 +7,7 @@ class NewsServices {
   static const String _baseUrl = Constants.baseURL;
   static final String _apikey = Constants.apiKey;
 
-  // ✅ daftar negara yang memang didukung oleh NewsAPI
+
   static const List<String> supportedCountries = [
     'ae', 'ar', 'at', 'au', 'be', 'bg', 'br', 'ca', 'ch', 'cn',
     'co', 'cu', 'cz', 'de', 'eg', 'fr', 'gb', 'gr', 'hk', 'hu',
@@ -17,7 +17,7 @@ class NewsServices {
     'ua', 'us', 've', 'za'
   ];
 
-  // === Get Top Headlines ===
+
   Future<NewsResponse> getTopHeadlines({
     String country = Constants.defaultCountry,
     String? category,
@@ -25,7 +25,7 @@ class NewsServices {
     int pageSize = 20,
   }) async {
     try {
-      // ✅ fallback otomatis kalau negara gak didukung
+
       if (!supportedCountries.contains(country)) {
         print('⚠️ Country $country not supported — using everything instead');
         return searchNews(query: category ?? 'news');
@@ -58,7 +58,7 @@ class NewsServices {
     }
   }
 
-  // === Search Everything ===
+
   Future<NewsResponse> searchNews({
     required String query,
     int page = 1,

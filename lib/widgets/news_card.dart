@@ -24,7 +24,7 @@ class NewsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar
+    
             if (articles.urlToImage != null)
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
@@ -46,7 +46,7 @@ class NewsCard extends StatelessWidget {
                 ),
               ),
 
-            // Konten bawah
+           
             Padding(
               padding: const EdgeInsets.all(14),
               child: Column(

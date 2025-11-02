@@ -13,9 +13,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   int _selectedIndex = 0;
 
   final List<IconData> _icons = [
-    Icons.grid_view,     // home icon
-    Icons.search,        // search icon
-    Icons.bookmark,      // saved icon
+    Icons.grid_view,
+    Icons.search,        
+    Icons.bookmark,    
   ];
 
   void _onItemTapped(int index) {
@@ -26,13 +26,13 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
     // Navigasi sesuai index
     switch (index) {
       case 0:
-        Get.toNamed(Routes.HOME); // ke home
+        Get.toNamed(Routes.HOME);
         break;
       case 1:
-        Get.toNamed(Routes.SEARCH); // ke search
+        Get.toNamed(Routes.SEARCH); 
         break;
       case 2:
-        Get.toNamed(Routes.SAVED); // ke halaman simpan/bookmark
+        Get.toNamed(Routes.SAVED);
         break;
     }
   }
@@ -56,7 +56,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white.withOpacity(0.1) : Colors.transparent,
+                color: isSelected ? Colors.white.withValues(alpha: 0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Icon(

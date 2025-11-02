@@ -21,10 +21,9 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // controller Pesawat terbang melintasi layar
     _planeController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4), // untuk durasinya brp
+      duration: const Duration(seconds: 4), 
     );
 
     _planeSlide = Tween<Offset>(
@@ -35,7 +34,6 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.bounceInOut,
     ));
 
-    // UNTUK ANIMASI LOGO BESAR MUNCUL
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -48,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _planeController.forward().then((_) => _fadeController.forward());
 
-    // UNTUK PINDAH KE HOME SETELAH 6 DETIK
+
     Future.delayed(const Duration(seconds: 7), () {
       Get.offAllNamed(Routes.HOME);
     });
@@ -67,7 +65,6 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: AppColors.primary,
       body: Stack(
         children: [
-          // UNTUK ANIMASI PESAWAT
           Align(
             alignment: Alignment.center,
             child: SlideTransition(
@@ -82,7 +79,6 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
 
-          // LOGO DAN TEXT ANIMASINYA
           Center(
             child: FadeTransition(
               opacity: _fadeLogo,

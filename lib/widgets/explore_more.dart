@@ -17,7 +17,7 @@ class ExploreMoreSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // === SECTION TITLE ===
+
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 8),
             child: Text(
@@ -56,7 +56,7 @@ class ExploreMoreSection extends StatelessWidget {
               );
             }
 
-            // === LIST OF ARTICLES ===
+  
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

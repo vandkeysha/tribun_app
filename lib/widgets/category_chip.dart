@@ -24,7 +24,7 @@ class CategoryChip extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 21, vertical: 10),
           decoration: BoxDecoration(
             color: isSelected
-                ? Colors.amber// warna kuning lembut kayak di screenshot
+                ? Colors.amber
                 : AppColors.cardShadow,
             borderRadius: BorderRadius.circular(20),
             boxShadow: isSelected
