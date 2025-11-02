@@ -10,112 +10,103 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> 
-      with SingleTickerProviderStateMixin{
-        late AnimationController _animationController;
-        late Animation<double> _fadeAnimation;
-        late Animation<double> _scaleAnimation;
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _planeController;
+  late Animation<Offset> _planeSlide;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeLogo;
 
-    @override
-    void initState(){
-      super.initState();
-      _animationController = AnimationController(
-        duration: Duration(seconds: 2),
-        vsync: this
-      );
+  @override
+  void initState() {
+    super.initState();
 
-      _fadeAnimation = Tween<double> (
-        begin: 0.0,
-        end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.elasticInOut
-      ));
+    // controller Pesawat terbang melintasi layar
+    _planeController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4), // untuk durasinya brp
+    );
 
-      _scaleAnimation = Tween<double>(
-        begin: 0.5,
-        end: 1.0
-      ).animate(CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.elasticInOut
-      ));
+    _planeSlide = Tween<Offset>(
+      begin: const Offset(-1.8, 1.0),
+      end: const Offset(4.9, -3.9),
+    ).animate(CurvedAnimation(
+      parent: _planeController,
+      curve: Curves.bounceInOut,
+    ));
 
-      _animationController.forward();
+    // UNTUK ANIMASI LOGO BESAR MUNCUL
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
 
-      // navigate to home screen after 3 seconds
+    _fadeLogo = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOut,
+    );
 
-      Future.delayed(Duration(seconds: 3), () {
-        Get.offAllNamed(Routes.HOME);
-      });
-    }
+    _planeController.forward().then((_) => _fadeController.forward());
 
-    @override 
-    void dispose(){
-      _animationController.dispose();
-      super.dispose();
-    }
-      
+    // UNTUK PINDAH KE HOME SETELAH 6 DETIK
+    Future.delayed(const Duration(seconds: 7), () {
+      Get.offAllNamed(Routes.HOME);
+    });
+  }
+
+  @override
+  void dispose() {
+    _planeController.dispose();
+    _fadeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow:[
-                            BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 20,
-                            offset: Offset(0 ,10)
-                          )] 
-                        ),
-                        child: Icon(
-                          Icons.newspaper,
-                          size: 60,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      SizedBox(height: 30),
-                      Text(
-                        'News App',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Stay Update with Latest new',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.8)
-                        ),
-                      ),
-                      SizedBox(height: 50),
-                      CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white)
-                      )
-                    ],
+      body: Stack(
+        children: [
+          // UNTUK ANIMASI PESAWAT
+          Align(
+            alignment: Alignment.center,
+            child: SlideTransition(
+              position: _planeSlide,
+              child: Transform.rotate(
+                angle: -0.2,
+                child: Image.asset(
+                  'assets/image/plane.png',
+                  width: 80,
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+
+          // LOGO DAN TEXT ANIMASINYA
+          Center(
+            child: FadeTransition(
+              opacity: _fadeLogo,
+              child: ScaleTransition(
+                scale: _fadeLogo,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/image/logo.png',
+                      width: 400,
+                      height: 200,
+                    ),
+                    SizedBox(height: 180),
+                    Image.asset(
+                      'assets/image/font.png',
+                      width: 170,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

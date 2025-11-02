@@ -10,108 +10,129 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsArticles articles = Get.arguments as NewsArticles;
-  
+
   NewsDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primary,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 300, // untuk ukuran image nya bisa di ubah sesuai keinginan
+            expandedHeight: 280,
             pinned: true,
+            backgroundColor: AppColors.cardShadow,
             flexibleSpace: FlexibleSpaceBar(
-              background: articles.urlToImage != null 
-                  ? CachedNetworkImage(
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (articles.urlToImage != null)
+                    CachedNetworkImage(
                       imageUrl: articles.urlToImage!,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        color: AppColors.divider,
-                        child: Center(
-                          child: CircularProgressIndicator(), // buat ngeload kalau gambarnya tidak muncul
-                        ),
+                        color: AppColors.primary,
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
-                      errorWidget: (context, url, error) => Container(
-                        color: AppColors.divider,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 50,
-                          color: AppColors.textHint,
-                        ),
-                      ),
-                    ) // untuk mengatur size image dari networkimage
-
-                    // statenment yang akan dijalankan ketika server tidak memiliki gambar atau 
-                    // => image == null
-                      :Container(
-                        color: AppColors.divider,
-                        child: Icon(
-                         Icons.newspaper,
-                          size: 50,
-                          color: AppColors.textHint,
+                      errorWidget: (context, url, error) => const Icon(
+                        Icons.image_not_supported,
+                        size: 60,
+                        color: Colors.white70,
                       ),
                     )
+                  else
+                    Container(
+                      color: AppColors.divider,
+                      child: const Icon(
+                        Icons.newspaper,
+                        size: 60,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  // gradient overlay biar teks jelas
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, Colors.black54],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.share),
-                onPressed: () => _shareArticle(),
+                icon: const Icon(Icons.share, color: Colors.white),
+                onPressed: _shareArticle,
               ),
               PopupMenuButton(
+                iconColor: Colors.white,
                 onSelected: (value) {
                   switch (value) {
-                    case 'copy_link':  // ketika user milih copy link
+                    case 'copy_link':
                       _copyLink();
                       break;
-                      case 'open_browser':  // ketika user milih open browser
+                    case 'open_browser':
                       _openInBrowser();
-                    break;
+                      break;
                   }
                 },
-                itemBuilder: (context) => [  
-                  PopupMenuItem(
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
                     value: 'copy_link',
                     child: Row(
                       children: [
                         Icon(Icons.copy),
                         SizedBox(width: 8),
-                        Text('copy Link')
+                        Text('Copy Link')
                       ],
                     ),
                   ),
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'open_browser',
                     child: Row(
                       children: [
                         Icon(Icons.open_in_browser),
-                        SizedBox(height: 8),
-                        Text('open in browser')
+                        SizedBox(width: 8),
+                        Text('Open in Browser')
                       ],
                     ),
                   )
                 ],
-               )
+              ),
             ],
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(16),
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.cardShadow,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //source and date
+                  // Source & date
                   Row(
                     children: [
-                      if (articles.source?.name != null) ...[
+                      if (articles.source?.name != null)
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1), // untuk membuat warnany menjadi lebih terang
-                            borderRadius: BorderRadius.circular(4)
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             articles.source!.name!,
@@ -122,9 +143,8 @@ class NewsDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 12),
-                      ],
-                      if (articles.publishedAt != null) ...[
+                      const SizedBox(width: 12),
+                      if (articles.publishedAt != null)
                         Text(
                           timeago.format(DateTime.parse(articles.publishedAt!)),
                           style: TextStyle(
@@ -132,120 +152,128 @@ class NewsDetailScreen extends StatelessWidget {
                             fontSize: 12,
                           ),
                         ),
-                      ]
                     ],
                   ),
-                   SizedBox(height: 16),
-                   // title
-                   if (articles.title != null) ...[
+                  const SizedBox(height: 12),
+
+                  // Rating bar (static contoh)
+                  Row(
+                    children: const [
+                      Icon(Icons.star, color: Colors.amber, size: 26),
+                      Icon(Icons.star, color: Colors.amber, size: 26),
+                      Icon(Icons.star, color: Colors.amber, size: 26),
+                      Icon(Icons.star, color: Colors.amber, size: 26),
+                      Icon(Icons.star_border, color: Colors.amber, size: 26),
+                      SizedBox(width: 8),
+                      Text(
+                        "4.0",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Title
+                  if (articles.title != null)
                     Text(
                       articles.title!,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                        height: 1.3
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        height: 1.4,
                       ),
                     ),
-                    SizedBox(height: 16),
-                   ],
-                    // description
-                    if (articles.description != null) ...[
-                      Text(
-                        articles.description!,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 16,
-                          height: 1.5
-                        ),
-                      )
-                    ],
-                    SizedBox(height: 20),
-                    // content
-                    if(articles.content != null) ...[
-                      Text(
-                        articles.content!,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
+
+                  const SizedBox(height: 16),
+
+                  // Description
+                  if (articles.description != null)
+                    Text(
+                      articles.description!,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        height: 1.5,
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        articles.content!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.textPrimary,
-                          height: 1.6
-                        ),
+                    ),
+
+                  const SizedBox(height: 18),
+
+                  // Content
+                  if (articles.content != null)
+                    Text(
+                      articles.content!,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        height: 1.6,
                       ),
-                      SizedBox(height: 24),
-                    ],
-                    // button read full articles
-                    if (articles.url != null) ...[
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _openInBrowser,
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)
-                              )
-                            ),
-                            child: Text(
-                              'read full article,',
-                              style: TextStyle(
-                                fontSize: 16,
-                                
-                              ),
-                            ),
+                    ),
+
+                  const SizedBox(height: 24),
+
+                  // Button read full article
+                  if (articles.url != null)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _openInBrowser,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2E4374),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                      )
-                    ],
-                    SizedBox(height: 32),
+                        ),
+                        child: const Text(
+                          'Read full Articles',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  void _shareArticle(){
+  void _shareArticle() {
     if (articles.url != null) {
       Share.share(
-        '${articles.title ?? 'check out this news'}\n\n${articles.url!}', // n/n/ untuk nambahin line baru
-        subject: articles.title
+        '${articles.title ?? 'Check out this news!'}\n\n${articles.url!}',
+        subject: articles.title,
       );
     }
   }
-  void _copyLink(){
+
+  void _copyLink() {
     if (articles.url != null) {
-      Clipboard.setData(ClipboardData(text: articles.url!));   //clipboard ketika melakukan copy 
-      Get.snackbar( 
-        'Succes',
-        'link copied to clipboard',
+      Clipboard.setData(ClipboardData(text: articles.url!));
+      Get.snackbar(
+        'Success',
+        'Link copied to clipboard',
         snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
-      ); 
+        duration: const Duration(seconds: 2),
+      );
     }
   }
 
-  void _openInBrowser() async{
+  void _openInBrowser() async {
     if (articles.url != null) {
       final Uri url = Uri.parse(articles.url!);
-       // proses menunggu apakah  url valid dan bisa dibuka oleh browser
       if (await canLaunchUrl(url)) {
-       // proses menunggu ketika url udh valid dan sedang di proses oleh browser sampai datanya muncul
-        await launchUrl(url, mode: LaunchMode.externalApplication);  
+        await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
-        Get.snackbar(   
-          'ErrorWidget',
-          "couldn't open the link",
-          snackPosition: SnackPosition.BOTTOM
+        Get.snackbar(
+          'Error',
+          "Couldn't open the link",
+          snackPosition: SnackPosition.BOTTOM,
         );
       }
     }

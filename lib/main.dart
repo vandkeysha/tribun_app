@@ -23,7 +23,7 @@ class TribunApp extends StatelessWidget {
       title: 'Tribun App',
       theme: ThemeData( // tema aplikasi seluru data
         primarySwatch: Colors.blue,
-        primaryColor: AppColors.primary,
+        primaryColor: const Color.fromARGB(0, 99, 141, 205),
         scaffoldBackgroundColor: AppColors.background,
         appBarTheme: AppBarTheme(
           backgroundColor: AppColors.primary,

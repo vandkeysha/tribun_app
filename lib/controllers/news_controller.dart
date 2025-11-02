@@ -3,85 +3,129 @@ import 'package:tribun_app/models/news_articles.dart';
 import 'package:tribun_app/services/news_services.dart';
 import 'package:tribun_app/utils/constants.dart';
 
-class NewsController extends GetxController{
-  // untuk memproses request yang sudah dibuat oleh news services.
+class NewsController extends GetxController {
   final NewsServices _newsServices = NewsServices();
 
-  // observable variables atau variable yang bisa di berubah.
-  final _isloading = false.obs; // apakah aplikasi sedang memuat berita.
-  final _articles = <NewsArticles>[].obs; //untuk menampilkan daftar berita yang sudah atau berhasil didapat.
-  final _selectedCategory = 'general'.obs; // untuk ngehandle category yg sedang dipilih atau yg akan muncul di home screen
-  final _error = ''.obs; // kalau ada kesalahan, pesan error akan disimpan disini 
+  
+  final _isLoading = false.obs;
+  final _articles = <NewsArticles>[].obs;
+  final _selectedCategory = 'general'.obs;
+  final _selectedCountry = Constants.defaultCountry.obs;
+  final _error = ''.obs;
 
-  // getters
-  // getter ini, seperti jendela untuk melihat isi variable yg sudah kita buat atau yg sudah di definisikan
-  // kemudian dengan ini , UI bisa melihat dengan mudah melihat dari controller
-  bool get isloading => _isloading.value;
+
+  bool get isLoading => _isLoading.value;
   List<NewsArticles> get articles => _articles;
   String get selectedCategory => _selectedCategory.value;
+  String get selectedCountry => _selectedCountry.value;
   String get error => _error.value;
   List<String> get categories => Constants.categories;
 
-  //begitu aplikasi dibuka , aplikasi langsung menanpilkan 
-  //berita utama dari endpoint top-headlines
-  // TODO: fetching data dari endpoint top-headlines
+  
+  final List<Map<String, String>> countries = [
+    {'code': 'all', 'name': 'All Countries'},
+    {'code': 'us', 'name': 'United States'},
+    {'code': 'id', 'name': 'Indonesia'},
+    {'code': 'jp', 'name': 'Japan'},
+    {'code': 'gb', 'name': 'United Kingdom'},
+    {'code': 'fr', 'name': 'France'},
+    {'code': 'au', 'name': 'Australia'},
+    {'code': 'cn', 'name': 'China'},
+    {'code': 'kr', 'name': 'South Korea'},
+    {'code': 'br', 'name': 'Brazil'},
+  ];
 
-  Future<void> fecthTobHeadlines({String? category}) async{
-    // blok ini akan di jalankan ketika rest API berhasil berkomunikasi dengan serve
+  // === Fetch berita utama ===
+  Future<void> fetchTopHeadlines({String? category, String? country}) async {
     try {
-      _isloading.value = true;
+      _isLoading.value = true;
       _error.value = '';
 
-      final response = await _newsServices.getTopHeadlines(
-        category: category ?? _selectedCategory.value,
-      );
+      final selectedCountryCode = country ?? _selectedCountry.value;
+      final selectedCategoryName = category ?? _selectedCategory.value;
 
-      _articles.value = response.articles;
+      print('Fetching news for country: $selectedCountryCode');
+
+   
+      if (selectedCountryCode == 'all') {
+        final response =
+            await _newsServices.searchNews(query: selectedCategoryName);
+        _articles.assignAll(response.articles);
+        return;
+      }
+
+
+      if (NewsServices.supportedCountries.contains(selectedCountryCode)) {
+        final response = await _newsServices.getTopHeadlines(
+          country: selectedCountryCode,
+          category: selectedCategoryName,
+        );
+        _articles.assignAll(response.articles);
+      } else {
+
+        print('⚠️ $selectedCountryCode not supported — using searchNews fallback');
+        final response =
+            await _newsServices.searchNews(query: selectedCategoryName);
+        _articles.assignAll(response.articles);
+      }
     } catch (e) {
       _error.value = e.toString();
       Get.snackbar(
         'Error',
-        'Failed to load news: ${e.toString()}',
+        'Failed to load news: $e',
         snackPosition: SnackPosition.BOTTOM,
       );
-      // finally akan tetap diexecute setelah salah satu dari blok 
-    } finally{
-      _isloading.value = false; 
+    } finally {
+      _isLoading.value = false;
     }
   }
-  
-  Future<void> refreshNews() async{
-    await fecthTobHeadlines();
+
+
+  Future<void> refreshNews() async {
+    await fetchTopHeadlines();
   }
 
-  void selectCategory(String category){
+
+  void selectCategory(String category) {
     if (_selectedCategory.value != category) {
       _selectedCategory.value = category;
-      fecthTobHeadlines(category: category);
+      fetchTopHeadlines(category: category);
     }
   }
 
-  Future<void> searchNews(String query) async{
+  
+  void changeCountry(String newCountry) {
+    print('🗺️ Changing country to: $newCountry');
+    _selectedCountry.value = newCountry;
+    fetchTopHeadlines(country: newCountry);
+  }
+
+
+  Future<void> searchNews(String query) async {
     if (query.isEmpty) return;
 
     try {
-      
-
-
-      _isloading.value = true;
+      _isLoading.value = true;
       _error.value = '';
 
       final response = await _newsServices.searchNews(query: query);
-      _articles.value = response.articles;
+      _articles.assignAll(response.articles);
     } catch (e) {
       _error.value = e.toString();
       Get.snackbar(
-        'error',
-        'Failed to search news: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM
+        'Error',
+        'Failed to search news: $e',
+        snackPosition: SnackPosition.BOTTOM,
       );
-    } finally{
-      _isloading.value = false;
+    } finally {
+      _isLoading.value = false;
     }
+  }
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchTopHeadlines();
   }
 }
